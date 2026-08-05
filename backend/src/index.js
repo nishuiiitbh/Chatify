@@ -6,7 +6,7 @@ import path from "path";
 import { clerkMiddleware } from "@clerk/express";
 
 import { connectDB } from "./lib/db.js";
-// import User from "./models/user.model.js"; // Uncomment only if you actually use it
+import job from "./lib/cron.js"; // <-- Add this
 
 const app = express();
 
@@ -41,5 +41,8 @@ if (fs.existsSync(publicDir)) {
 
 app.listen(port, () => {
   connectDB();
+
+  job.start(); // <-- Add this
+
   console.log(`Server started on port ${port}`);
 });
