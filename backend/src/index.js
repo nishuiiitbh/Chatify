@@ -1,11 +1,13 @@
+import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import fs from "fs";
-import path from "path"; // File/folder ka path (address) safely banane ke liye
+import path from "path";
 import { clerkMiddleware } from "@clerk/express";
 
 import { connectDB } from "./lib/db.js";
 import job from "./lib/cron.js";
+import clerkWebhook from "./webhooks/clerk.webhook.js";
 
 const app = express();
 
