@@ -39,10 +39,6 @@ app.get("/health", (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
-// Agar public folder exist karta hai,
-// to Express browser ko isi folder ke andar ki
-//  static files:---
-// (HTML, CSS, JS, images) serve karega.
 if (fs.existsSync(publicDir)) {
   app.use(express.static(publicDir));
 }
