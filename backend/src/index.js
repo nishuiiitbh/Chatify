@@ -10,20 +10,13 @@ import job from "./lib/cron.js";
 import clerkWebhook from "./webhooks/clerk.webhook.js";
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.route.js";
-
-const app = express();
+import { app, server } from "./lib/socket.js";
 
 const port = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
-// Current project ke andar "public" folder
-//  ka poora address (path) store kar rahe
-//  hain publicDir me
-// cwd=current directory
 const publicDir = path.join(process.cwd(), "public");
 
-// Webhook ke liye raw data chahiye hota hai,
-// isliye JSON me parse nahi karte
 app.use(
   "/api/webhooks/clerk",
   express.raw({ type: "application/json" }),
@@ -32,7 +25,6 @@ app.use(
 
 app.use(express.json());
 
-// Sirf FRONTEND_URL se request allow karo
 app.use(
   cors({
     origin: FRONTEND_URL,
@@ -40,11 +32,6 @@ app.use(
   }),
 );
 
-// clerkMiddleware() acts like a security guard.
-// Every request first goes through Clerk. It
-// verifies whether the user is authenticated.
-// If the user is valid, it allows the request to
-//  continue to the backend
 app.use(clerkMiddleware());
 
 app.get("/health", (req, res) => {
@@ -60,10 +47,9 @@ if (fs.existsSync(publicDir)) {
   app.use(express.static(publicDir));
 }
 
-app.listen(port, () => {
+server.listen(port, () => {
   connectDB();
+  console.log("Server is up and running on PORT:", port);
 
-  job.start(); // Cron job start karo
-
-  console.log(`Server started on port ${port}`);
+  if (process.env.NODE_ENV === "production") job.start();
 });

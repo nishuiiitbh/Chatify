@@ -1,25 +1,29 @@
 import mongoose from "mongoose";
 
-const messageSchema = new moongose.Schema(
+const messageSchema = new mongoose.Schema(
   {
     senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+
     receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+
     text: {
-      type: "string",
+      type: String,
     },
-    imgaes: {
-      type: "string",
+
+    image: {
+      type: String,
     },
-    videos: {
-      type: "string",
+
+    video: {
+      type: String,
     },
   },
   {
@@ -28,4 +32,5 @@ const messageSchema = new moongose.Schema(
 );
 
 const Message = mongoose.model("Message", messageSchema);
+
 export default Message;
